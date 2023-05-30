@@ -24,7 +24,7 @@ body {
     padding: 18px;
     border-radius: 25px;
     border: solid 5px #757083;
-    gap: 10px;
+    gap: 15px;
 }
 
 .screen {
@@ -43,10 +43,12 @@ body {
 
 #history {
     font-size: 30px;
+    height: 38px;
 }
 
 #current {
     font-size: 43px;
+    height: 38px;
 }
 
 .keypad {
@@ -64,6 +66,7 @@ button {
     border-color: #B9C6AE;
     color: #B9C6AE;
     font-weight: bold;
+    font-size: 18px;
 }
 
 button:hover {
