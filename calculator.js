@@ -1,23 +1,32 @@
 const numberButtons = document.querySelectorAll('.number');
 const operationButtons = document.querySelectorAll('.operator');
-const deleteButtons = document.querySelectorAll('.bottom');
-const currentInput = document.querySelector('#current');
-const history = document.querySelector('#history');
+const clearButton = document.querySelector('#clear');
+const deleteButton = document.querySelector('#delete');
+const equalButton = document.querySelector('#equal');
+const decimalButton = document.querySelector('#decimal');
+const inputDisplay = document.querySelector('#current');
+const historyDisplay = document.querySelector('#history');
+
+let number1 = '';
+let number2 = '';
+let operation = '';
+let createNewInput = true;
 
 function add(a, b) {
-    return a + b;
+    
+    return Number(a) + Number(b);
 }
 
 function subtract(a, b) {
-    return a - b;
+    return Number(a) - Number(b);
 }
 
 function multiply(a, b) {
-    return a * b;
+    return Number(a) * Number(b);
 }
 
 function divide(a, b) {
-    return a / b;
+    return Number(a) / Number(b);
 }
 
 function operate(first, operator, second) {
@@ -25,7 +34,7 @@ function operate(first, operator, second) {
         return add(first, second);
     } else if (operator == '-') {
         return subtract(first, second);
-    } else if (operator == '*') {
+    } else if (operator == 'x') {
         return multiply(first, second);
     } else if (operator == '/') {
         return divide(first, second);
@@ -34,44 +43,85 @@ function operate(first, operator, second) {
     }
 }
 
-let input = '0';
-function displayInput() {
-    currentInput.textContent = input;
+function roundOff(number) {
+    return Math.round(number * 1000000000) / 1000000000;
 }
 
-let number1 = 0;
-let number2 = 0;
-let operator = '/';
-let hasDecimal = false;
+function clearInput() {
+    inputDisplay.textContent = '';
+}
+
+function reset() {
+    number1 = '';
+    number2 = '';
+    operation = '';
+    inputDisplay.textContent = '0';
+    historyDisplay.textContent = '';
+    createNewInput = true;
+}
+
+function backspace() {
+    if (inputDisplay.textContent.length == 1) {
+        inputDisplay.textContent = '0';
+        createNewInput = true;
+    } else {
+        inputDisplay.textContent = inputDisplay.textContent.slice(0, -1);
+    }
+}
+
+function setOperation(operator) {
+    number1 = inputDisplay.textContent;
+    operation = operator;
+    historyDisplay.textContent = number1 + operation;
+    createNewInput = true;
+}
+
+function evaluate() {
+    if (operation == '') return;
+    number2 = inputDisplay.textContent;
+    inputDisplay.textContent = roundOff(operate(number1, operation, number2));
+    createNewInput = true;
+    operation = '';
+}
+
+function chainOperations() {
+    number2 = inputDisplay.textContent;
+    inputDisplay.textContent = roundOff(operate(number1, operation, number2));
+}
+
+clearButton.addEventListener('click', reset);
+deleteButton.addEventListener('click', backspace);
+
+equalButton.addEventListener('click', () => {
+    evaluate();
+    historyDisplay.textContent += number2 + '=';
+});
 
 numberButtons.forEach((button) => {
     button.addEventListener('click', () => {
-        if (input.length < 12) {
-            if (input == 0) {
-                input = button.textContent;
-            } else {
-                input += button.textContent;
+        if (createNewInput || inputDisplay.textContent === '0') {
+            clearInput();
+            inputDisplay.textContent = button.textContent;
+            createNewInput = false;
+        } else {
+            if (inputDisplay.textContent.length < 12) {
+                inputDisplay.textContent += button.textContent;
             }
-            displayInput();
-            displayCounter++;
         }
     })
+});
+
+decimalButton.addEventListener('click', () => {
+
 })
 
-deleteButtons.forEach((button) => {
+operationButtons.forEach((button) => {
     button.addEventListener('click', () => {
-        if (button.textContent === 'Delete') {
-            if (input.length == 1) {
-                input = '0';
-            } else {
-                input = input.slice(0, -1);
-            }
-            displayInput();
-        } else if (button.textContent === 'Clear') {
-            input = '0';
-            displayInput();
+        if (operation != '') {
+            chainOperations();
+            setOperation(button.textContent);
+        } else {
+            setOperation(button.textContent);
         }
-    })
-})
-
-// console.log(operate(number1, operator, number2));
+    });
+});
