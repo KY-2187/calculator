@@ -44,7 +44,7 @@ function operate(first, operator, second) {
 }
 
 function roundOff(number) {
-    return Math.round(number * 1000000000) / 1000000000;
+    return Math.round(number * 100000) / 100000;
 }
 
 function clearInput() {
@@ -112,7 +112,19 @@ numberButtons.forEach((button) => {
 });
 
 decimalButton.addEventListener('click', () => {
-
+    if (!inputDisplay.textContent.includes('.')) {
+        if (createNewInput) {
+            clearInput();
+            inputDisplay.textContent = '0.';
+            createNewInput = false;
+        } else {
+            inputDisplay.textContent += '.';
+        }
+    } else if (createNewInput) {
+        clearInput();
+        inputDisplay.textContent = '0.';
+        createNewInput = false;
+    }
 })
 
 operationButtons.forEach((button) => {
