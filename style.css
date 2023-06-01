@@ -8,11 +8,13 @@ html, body {
 }
 body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #090C08;
     margin: 0;
     padding: 0;
+    gap: 10px;
 }
 
 .calculator {
@@ -67,6 +69,7 @@ button {
     color: #B9C6AE;
     font-weight: bold;
     font-size: 18px;
+    font-family: 'Roboto', sans-serif;
 }
 
 button:hover {
@@ -82,4 +85,11 @@ button:hover {
 
 .bottom {
     width: 140px;
+}
+
+.text {
+    color: #B9C6AE;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
 }
